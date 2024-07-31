@@ -1,7 +1,7 @@
 import { ContactsColection } from "../db/models/contacts.js";
-import {getAllContacts, getContactById, createContacts, deleteContacts} from '../controlers/contacts.js';
+import {getAllContacts, getContactById, createContacts, deleteContacts, updateContact} from '../controlers/contacts.js';
 
-function getAllContacts(){
+function getAllContacts(contact){
     return ContactsColection.find();
 }
 
@@ -13,30 +13,29 @@ function createContacts(contact) {
   return ContactsColection.create(contact);
 }
 
-function deletContacts(studentId) {
+function updateContact(contactId, contact) {
+  return Student.findByIdAndUpdate(contactId, contact, { new: true });
+}
+
+function deleteContacts(studentId) {
   return ContactsColection.findByIdAndDelete(contactId);
 }
 
-// function updateStudent(studentId, student) {
-//   return Student.findByIdAndUpdate(studentId, student, { new: true }); // Student.findOneAndUpdate({_id:studentId}, student)
-// }
-
-// function changeStudentDuty(studentId, duty) {
-//   return Student.findByIdAndUpdate(studentId, { onDuty: duty }, { new: true });
-// }
-
-// export {
-//   getAllContacts,
-//   getContactById,
-//   createContacts,
-// };
 
 
 
-//   deleteStudent,
-//   updateStudent,
-//   changeStudentDuty,
-// };
+
+export {
+  getAllContacts,
+  getContactById,
+  createContacts,
+  updateContact,
+  deleteContacts,
+};
+
+
+
+
 
 
 
