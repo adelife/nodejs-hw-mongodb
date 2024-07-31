@@ -26,7 +26,7 @@ export const getContactById = async( req, res, next) =>{
     
         const {contactId} = req.params;
         const contact = await ContactsColection.findById(contactId);
-        if(!contactId){
+        if(!contact){
             // res.status(404).json({
             //     status: 404,
             //     message : 'Contact not found',
@@ -74,11 +74,11 @@ export const updateContact = async(req, res, next)=> {
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
     };
-    const result = await ContactsColection.findOneAndUpdate(contactId, contact);
-    if(result === null){
+    const result = await ContactsColection.findByIdAndUpdate(contactId, contact);
+    if(!result){
         return next(createHttpError(404, 'Student not found'));
     };
-    res.status(200).send({
+    res.status(200).json({
         status: 200,
         message : "Successfully patched a contact!",
         data: result,
