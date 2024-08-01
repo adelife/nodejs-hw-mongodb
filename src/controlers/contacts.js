@@ -74,9 +74,9 @@ export const updateContact = async(req, res, next)=> {
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
     };
-    const result = await ContactsColection.findByIdAndUpdate(contactId, contact);
+    const result = await ContactsColection.findOneAndUpdate(contactId, contact);
     if(!result){
-        return next(createHttpError(404, 'Student not found'));
+        return next(createHttpError(404, 'Contsct not found'));
     };
     res.status(200).json({
         status: 200,
@@ -89,13 +89,11 @@ export const deleteContacts= async(req, res, next) =>{
     try{
     const {contactId} = req.params;
     const result = await ContactsColection.findByIdAndDelete(contactId);
-        if(result === null){
+        if(!result){
             return next(createHttpError(404,"Contact not found"));
         }
         res.send({
             status: 204,
-            message: "Contact deleted",
-            data: result,
         });
 
     }catch(error){
