@@ -7,7 +7,7 @@ const router = Router();
 router.get('/contacts', ctrlWrapper(getAllContacts));
 router.get('/contacts/:contactId',ctrlWrapper(getContactById));
 router.post('/contacts', ctrlWrapper(createContacts));
-router.patch('/contacts/:contactID', ctrlWrapper(updateContact));
+router.patch('/contacts/:contactId', ctrlWrapper(updateContact));
 router.delete('/contacts/:contactId',ctrlWrapper(deleteContacts));
 
 

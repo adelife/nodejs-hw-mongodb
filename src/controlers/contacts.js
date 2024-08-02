@@ -74,11 +74,11 @@ export const updateContact = async(req, res, next)=> {
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
     };
-    const result = await ContactsColection.findOneAndUpdate(contactId, contact);
+    const result = await ContactsColection.findByIdAndUpdate(contactId, contact,  { new:true } );
     if(!result){
         return next(createHttpError(404, 'Contsct not found'));
     };
-    res.status(200).json({
+    res.status(200).send({
         status: 200,
         message : "Successfully patched a contact!",
         data: result,
@@ -92,7 +92,7 @@ export const deleteContacts= async(req, res, next) =>{
         if(!result){
             return next(createHttpError(404,"Contact not found"));
         }
-        res.send({
+        res.status(204).send({
             status: 204,
         });
 
