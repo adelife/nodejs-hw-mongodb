@@ -41,10 +41,10 @@ function createContacts(contact) {
 }
 
 function updateContact(contactId, contact) {
-  return Student.findByIdAndUpdate(contactId, contact, { new: true });
+  return ContactsColection.findByIdAndUpdate(contactId, contact, { new: true });
 }
 
-function deleteContacts(studentId) {
+function deleteContacts(contactId) {
   return ContactsColection.findByIdAndDelete(contactId);
 }
 
