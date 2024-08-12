@@ -1,9 +1,36 @@
 import { ContactsColection } from "../db/models/contacts.js";
-import {getAllContacts, getContactById, createContacts, deleteContacts, updateContact} from '../controlers/contacts.js';
+// import {getAllContacts, getContactById, createContacts, deleteContacts, updateContact} from '../controlers/contacts.js';
+import { calculatePaginationData } from "../utils/calculatePaginationData.js";
 
-function getAllContacts(contact){
-    return ContactsColection.find();
+
+async function getAllContacts({page, perPage, sortBy = '_id', sortOrder, filter}) {
+  const limit = perPage;
+  const skip = page > 0 ? (page-1) * perPage : 0;
+  const contactQuery = ContactsColection.find();
+  if (filter.type) {
+    contactQuery.where('type').equals(filter.type);
+  }
+   if(filter.isFavourite){
+    contactQuery.where('isFavourite').gte(filter.isFavourite);
+   }
+
+
+  const contactCount = await ContactsColection.find().merge(contactQuery).countDocuments();
+  const contacts = await contactQuery.skip(skip).limit.exec();
+  const paginationData = calculatePaginationData(contactCount, perPage, page);
+
+  return{
+    data: contacts,
+    ...paginationData,
+  };
+
+ 
 }
+
+
+// function getAllContacts(contact){
+//     return ContactsColection.find();
+// }
 
 function getContactById(contactId) {
   return ContactsColection.findById(contactId);

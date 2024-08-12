@@ -2,15 +2,38 @@
 import { ContactsColection } from "../db/models/contacts.js";
 import createHttpError from 'http-errors';
 // import {getAllContacts, getContactById, createContacts} from '../services/contacts.js';
+import { parsePaginationParams } from "../utils/parsePaginationParams.js";
+// import { contactSchema } from "../validations/contacts.js";
+import { query } from "express";
+import { contactFieldList } from "../constants/index.js";
 
-export const getAllContacts = async( _req, res, next) => {
+export const getAllContacts = async( req, res, next) => {
+    const {page, perPage} = parsePaginationParams(query);
+    const {sortBy, sortOrder} = parsePaginationParams(query, contactFieldList);
+    const filter = parsePaginationParams(req.query);
+
+
         try{
-            const contacts = await ContactsColection.find();
+            const contacts = await ContactsColection.find(
+                page,
+                perPage,
+                sortBy,
+                sortOrder,
+                filter,);
+
             res.status(200).json({
-                status: 200,
-                message : "Successfully found contacts!",
-                data : contacts,
-            });
+                "status": 200,
+    "message": "Successfully found contacts!",
+    "data": {
+        "data": [contacts],
+        "page": 2,
+        "perPage": 4,
+        "totalItems": 6,
+        "totalPages": 2,
+        "hasPreviousPage": true,
+        "hasNextPage": false
+            }
+        });
         }catch(error){
             console.log(error);
             res.status(500).json({
