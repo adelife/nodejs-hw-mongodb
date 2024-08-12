@@ -15,8 +15,12 @@ async function getAllContacts({page, perPage, sortBy = '_id', sortOrder, filter}
    }
 
 
-  const contactCount = await ContactsColection.find().merge(contactQuery).countDocuments();
-  const contacts = await contactQuery.skip(skip).limit.exec();
+  const [contactCount, contacts] = await Promise.all([
+    ContactsColection.find().merge(contactQuery).countDocuments(),
+    contactQuery.skip(skip).limit(limit).sort({[sortBy]: sortOrder}).exec(),
+
+  ]);
+  
   const paginationData = calculatePaginationData(contactCount, perPage, page);
 
   return{
