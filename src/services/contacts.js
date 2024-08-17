@@ -3,7 +3,7 @@ import { ContactsColection } from "../db/models/contacts.js";
 import { calculatePaginationData } from "../utils/calculatePaginationData.js";
 
 
-async function getAllContacts({page, perPage, sortBy = '_id', sortOrder, filter}) {
+async function getContacts({page, perPage, sortBy = '_id', sortOrder, filter}) {
   const limit = perPage;
   const skip = page > 0 ? (page-1) * perPage : 0;
   const contactQuery = ContactsColection.find();
@@ -57,7 +57,7 @@ function deleteContacts(contactId) {
 
 
 export {
-  getAllContacts,
+  getContacts,
   getContactById,
   createContacts,
   updateContact,

@@ -6,6 +6,7 @@ import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 // import { contactSchema } from "../validations/contacts.js";
 import { query } from "express";
 import { contactFieldList } from "../constants/index.js";
+import {getContacts} from '../services/contacts.js';
 
 export const getAllContacts = async( req, res, next) => {
     const {page, perPage} = parsePaginationParams(query);
@@ -14,25 +15,25 @@ export const getAllContacts = async( req, res, next) => {
 
 
         try{
-            const contacts = await ContactsColection.find(
+            const contacts = await getContacts({
                 page,
                 perPage,
                 sortBy,
                 sortOrder,
-                filter,);
+                filter,});
 
             res.status(200).json({
-                "status": 200,
-    "message": "Successfully found contacts!",
-    "data": {
-        "data": [contacts],
-        "page": 2,
-        "perPage": 4,
-        "totalItems": 6,
-        "totalPages": 2,
-        "hasPreviousPage": true,
-        "hasNextPage": false
-            }
+                status: 200,
+                message: "Successfully found contacts!",
+                data: {
+                    "data" : [contacts],
+                    "page": 2,
+                    "perPage": 4,
+                    "totalItems": 6,
+                    "totalPages": 2,
+                    "hasPreviousPage": true,
+                    "hasNextPage": false
+                        }
         });
         }catch(error){
             console.log(error);
