@@ -1,4 +1,4 @@
-import { contactType } from "../constants";
+import { contactType } from "../constants/index.js";
 
 const parseBoolean = (value) => {
 if(typeof value !== 'string')
@@ -11,8 +11,16 @@ if(value === 'true'){
 return undefined;
 
 };
-const parseFilterParams = ({ type, isFavourite }) => {
-    const parsedType = contactType.includes(type) ? type : null;
+
+const parseType = (value) =>{
+    const type = typeof value;
+    if(typeof value !== 'string') 
+        return console.log('type:', type);
+    if(contactType.includes(value)) 
+    return value;
+};
+export const parseFilterParams = ({ type, isFavourite }) => {
+    const parsedType = parseType(type);
     const parsedIsFavorite = parseBoolean(isFavourite);
 
     return {
@@ -21,4 +29,3 @@ const parseFilterParams = ({ type, isFavourite }) => {
     };
 };
 
-export default parseFilterParams;

@@ -1,12 +1,13 @@
-export const contactType = ['work', 'home', 'personal'];
+const contactType = ['work', 'home', 'personal'];
 
-export const sortOrderList = ['asc', 'desc'];
+const sortOrderList = ['asc', 'desc'];
 
-export const contactFieldList = [
-    '_id',
-    'name',
-    'phoneNumber',
-    'email',
-    'isFavourite',
-    'contactType',
+const contactFieldList = [
+    "name",
+    "phoneNumber",
+    "email",
+    "isFavourite",
+    "contactType",
 ];
+
+export {contactType, sortOrderList, contactFieldList };

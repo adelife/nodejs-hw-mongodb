@@ -12,8 +12,8 @@ function parseNumber(maybeNumber, defaultValue) {
     return parsedNumber;
   }
   
-  function parsePaginationParams(query) {
-    const { page, perPage } = query;
+ export const parsePaginationParams =  ({ page, perPage}) => {
+    
   
     const parsedPage = parseNumber(page, 1);
     const parsedPerPage = parseNumber(perPage, 10);
@@ -22,8 +22,8 @@ function parseNumber(maybeNumber, defaultValue) {
       page: parsedPage,
       perPage: parsedPerPage,
     };
-  }
+  };
   
-  export { parsePaginationParams };
+ 
   
   

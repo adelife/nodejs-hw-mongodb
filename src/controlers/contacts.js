@@ -3,15 +3,16 @@ import { ContactsColection } from "../db/models/contacts.js";
 import createHttpError from 'http-errors';
 // import {getAllContacts, getContactById, createContacts} from '../services/contacts.js';
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
+import {parseSortParams} from "../utils/parseSortParams.js";
+import {parseFilterParams} from "../utils/parseFilterParams.js";
 // import { contactSchema } from "../validations/contacts.js";
-import { query } from "express";
 import { contactFieldList } from "../constants/index.js";
 import {getContacts} from '../services/contacts.js';
 
 export const getAllContacts = async( req, res, next) => {
-    const {page, perPage} = parsePaginationParams(query);
-    const {sortBy, sortOrder} = parsePaginationParams(query, contactFieldList);
-    const filter = parsePaginationParams(req.query);
+    const {page, perPage} = parsePaginationParams(req.query);
+    const {sortBy, sortOrder} = parseSortParams(req.query, contactFieldList);
+    const filter = parseFilterParams(req.query);
 
 
         try{
