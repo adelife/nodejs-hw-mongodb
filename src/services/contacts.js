@@ -15,10 +15,10 @@ const getContacts = async ({page, perPage, sortBy, sortOrder, filter = {} }) => 
     const totalItems = await ContactsColection.find().merge(contactQuery).countDocuments();
     const data = await contactQuery.skip(skip).limit(perPage).sort({[sortBy] : sortOrder}).exec();
 
-    const { totalPages, hasNextPage, hasPreviousPage} = calculatePaginationData({ 
+    const {totalPages, hasNextPage, hasPreviousPage} = calculatePaginationData({ 
       total :  totalItems,
       page,
-      perPage 
+      perPage
     });
 
     return{
