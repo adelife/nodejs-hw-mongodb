@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 // import pino from 'pino-http';
 import contactsRouter from './routers/contacts.js';
+import authRouters from "./routers/auth.js";
 import { env } from './utils/env.js';
 
 
@@ -29,6 +30,8 @@ export const setupServer = () => {
 
     // app.get('/contacts', getAllContacts);
     // app.get('/contacts/:contactId', getContactById);
+
+    app.use(authRouters);
 
     app.use(contactsRouter);
 
