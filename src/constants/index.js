@@ -12,7 +12,7 @@ const contactFieldList = [
 
 export const ACCESS_TOKEN_TTL = 15*60*1000; // 15 min
 
-export const REFRESH_TOKEN_TTL = 24*30*60*60*1000; 
+export const REFRESH_TOKEN_TTL = 30*24*3600*1000; //30 days
 
 
 export {contactType, sortOrderList, contactFieldList };
