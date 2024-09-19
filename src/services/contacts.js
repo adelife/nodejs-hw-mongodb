@@ -2,7 +2,7 @@ import { ContactsColection } from "../db/models/contacts.js";
 import { calculatePaginationData } from "../utils/calculatePaginationData.js";
 
 
-const getContacts = async ({page, perPage, sortBy, sortOrder, filter = {} }) => {
+const getContacts = async ({page, perPage, sortBy, sortOrder, filter = {} , parentId}) => {
     const skip = (page-1) * perPage;
     const contactQuery = ContactsColection.find();
     if(filter.type){
@@ -11,6 +11,9 @@ const getContacts = async ({page, perPage, sortBy, sortOrder, filter = {} }) => 
     if(filter.isFavourite){
       contactQuery.were("isFavourite").equals(filter.isFavourite);
     };
+
+  
+    contactQuery.were("parentId").equals(parentId);  //new
 
     const totalItems = await ContactsColection.find().merge(contactQuery).countDocuments();
     const data = await contactQuery.skip(skip).limit(perPage).sort({[sortBy] : sortOrder}).exec();

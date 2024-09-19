@@ -14,14 +14,15 @@ export const getAllContacts = async( req, res, next) => {
     const {sortBy, sortOrder} = parseSortParams(req.query, contactFieldList);
     const filter = parseFilterParams(req.query);
 
-
         try{
             const contacts = await getContacts({
                 page,
                 perPage,
                 sortBy,
                 sortOrder,
-                filter,});
+                filter,
+                parentId: req.user._id,
+            });
 
             res.status(200).json({
                 status: 200,
@@ -76,6 +77,7 @@ export  const createContacts = async(req, res, next) => {
     email:req.body.email,
     // isFavourite: Boolean,
     contactType: req.body.contactType,
+    parentId: req.user._id,
  };
   const createdContact = await ContactsColection.create(contact);
     
