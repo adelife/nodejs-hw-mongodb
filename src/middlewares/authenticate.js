@@ -3,12 +3,18 @@ import { Session } from "../db/models/session.js";
 import { User } from "../db/models/user.js"; 
 
 
-export async function auth(req, res,next){
-   if(typeof req.headers.authorization !== 'string'){
-    return next(createHttpError(401, "Please provide Authorization header"));
-   }
+export async function authenticate(req, res,next){
+   const authHeader = req.get("Authorization");
 
-  const [bearer, accessToken] =  req.headers.authorization.split(" ", 2);
+   if (!authHeader) {
+      return next(createHttpError(401, "Authorization header missing"));
+  }
+
+   // if(typeof req.headers.authorization !== 'string'){
+   //  return next(createHttpError(401, "Please provide Authorization header"));
+   // }
+
+  const [bearer, accessToken] =  authHeader.split(" ", 2);
 
   if (bearer !== "Bearer" || typeof accessToken !== "string"){
     return next(createHttpError(401, "Auth header should be type of Bearer"));

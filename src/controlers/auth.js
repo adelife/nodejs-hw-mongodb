@@ -1,6 +1,7 @@
 import * as AuthService from "../services/auth.js";
 
 
+
 async function register(req, res) {
     const user= {
         name: req.body.name,
@@ -9,15 +10,14 @@ async function register(req, res) {
     };
 
     const registedUser =  AuthService.registerUser(user);
-    // console.log(createdUser);
+    console.log(registedUser);
 
     res.send({
         status: 201,
         message: "Successfully registered a user!",
         data: registedUser,
-    });
+});
 };
-
 async function login(req, res) {
     const {email, password} = req.body;
 
