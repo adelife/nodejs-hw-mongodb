@@ -4,7 +4,7 @@ import createHttpError from 'http-errors';
 export const isValidId = (req, res, next) => {
   const { contactId } = req.params;
   if (!isValidObjectId(contactId)) {
-    throw createHttpError(404, 'Not found');
+    return next(createHttpError(404, `${contactId}`,  'Not valid ID')) ;
   }
 
   next();

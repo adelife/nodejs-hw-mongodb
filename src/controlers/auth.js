@@ -1,4 +1,5 @@
 import * as AuthService from "../services/auth.js";
+// import { registerUser } from "../services/auth.js";
 
 
 
@@ -9,10 +10,10 @@ async function register(req, res) {
         password: req.body.password,
     };
 
-    const registedUser =  AuthService.registerUser(user);
-    console.log(registedUser);
+    const registedUser = await AuthService.registerUser(user);
 
-    res.send({
+
+    res.status(201).send({
         status: 201,
         message: "Successfully registered a user!",
         data: registedUser,
