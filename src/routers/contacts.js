@@ -9,7 +9,7 @@ import {authenticate} from "../middlewares/authenticate.js";
 const router = Router();
 router.use(authenticate);
 
-router.get('/contacts', authenticate, ctrlWrapper(getAllContacts));
+router.get('/contacts', ctrlWrapper(getAllContacts));
 router.get('/contacts/:contactId', isValidId, ctrlWrapper(getContactById));
 router.post('/contacts', validateBody(contactSchema), ctrlWrapper(createContacts));
 router.patch('/contacts/:contactId', isValidId,  validateBody(updatecontactSchema), ctrlWrapper(updateContact));
