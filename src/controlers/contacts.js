@@ -54,7 +54,7 @@ export const getAllContacts = async( req, res, next) => {
 export const getContactById = async( req, res, next) =>{
         const { _id: userId } = req.user;
         const {contactId} = req.params;
-        const contact = await ContactsColection.findById({_id:contactId, userId});
+        const contact = await ContactsColection.findOne({_id:contactId, userId});
         if(!contact){
             // res.status(404).json({
             //     status: 404,
@@ -80,9 +80,9 @@ export  const createContacts = async(req, res, next) => {
     email:req.body.email,
     // isFavourite: Boolean,
     contactType: req.body.contactType,
-    parentId: req.user._id,
+    userId: req.user._id,
  };
-  const createdContact = await ContactsColection.create(contact,userId);
+  const createdContact = await ContactsColection.create({contact,userId});
     
 res
   .status(201)
@@ -106,7 +106,7 @@ export const updateContact = async(req, res, next)=> {
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
     };
-    const result = await ContactsColection.findByIdAndUpdate(contactId, contact, userId ,  { new:true } );
+    const result = await ContactsColection.findOneAndUpdate({ contactId, userId, contact},{ new:true } );
     if(!result){
         return next(createHttpError(404, 'Contsct not found'));
     };
@@ -121,7 +121,7 @@ export const deleteContacts= async(req, res, next) =>{
     const { _id: userId } = req.user;
     try{
     const {contactId} = req.params;
-    const result = await ContactsColection.findByIdAndDelete(contactId, userId);
+    const result = await ContactsColection.findOneAndDelete({userId, contactId});
         if(!result){
             return next(createHttpError(404,"Contact not found"));
         }
