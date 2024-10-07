@@ -14,7 +14,7 @@ export const getAllContacts = async( req, res, next) => {
 
     const {page, perPage} = parsePaginationParams(req.query);
     const {sortBy, sortOrder} = parseSortParams(req.query, contactFieldList);
-    const filter = { ...parseFilterParams(req.query), userId};
+    const filter = { ...parseFilterParams(req.query),userId};
 
         try{
             const contacts = await getContacts({
@@ -23,7 +23,7 @@ export const getAllContacts = async( req, res, next) => {
                 sortBy,
                 sortOrder,
                 filter,
-                parentId: req.user._id,
+                userId: req.user._id,
             });
 
             res.status(200).json({
@@ -74,15 +74,15 @@ export const getContactById = async( req, res, next) =>{
 export  const createContacts = async(req, res, next) => {
     const {_id: userId } = req.user;
     try{
- const contact = {
-    name : req.body.name,
-    phoneNumber: req.body.phoneNumber,
-    email:req.body.email,
-    // isFavourite: Boolean,
-    contactType: req.body.contactType,
-    userId: req.user._id,
- };
-  const createdContact = await ContactsColection.create({contact,userId});
+//  const contact = {
+//     name : req.body.name,
+//     phoneNumber: req.body.phoneNumber,
+//     email:req.body.email,
+//     // isFavourite: Boolean,
+//     contactType: req.body.contactType,
+//     userId: req.user._id,
+//  };
+  const createdContact = await ContactsColection.create({...req.body, userId});
     
 res
   .status(201)
@@ -99,14 +99,14 @@ res
 export const updateContact = async(req, res, next)=> {
     const { _id: userId } = req.user;
     const {contactId} = req.params;
-    const contact = {
-        name : req.body.name,
-        phoneNumber: req.body.phoneNumber,
-        email:req.body.email,
-        isFavourite: req.body.isFavourite,
-        contactType: req.body.contactType,
-    };
-    const result = await ContactsColection.findOneAndUpdate({ contactId, userId, contact},{ new:true } );
+    // const contact = {
+    //     name : req.body.name,
+    //     phoneNumber: req.body.phoneNumber,
+    //     email:req.body.email,
+    //     isFavourite: req.body.isFavourite,
+    //     contactType: req.body.contactType,
+    // };
+    const result = await ContactsColection.findOneAndUpdate( {_id:contactId, userId, ...req.body,  new:true} );
     if(!result){
         return next(createHttpError(404, 'Contsct not found'));
     };
@@ -121,7 +121,7 @@ export const deleteContacts= async(req, res, next) =>{
     const { _id: userId } = req.user;
     try{
     const {contactId} = req.params;
-    const result = await ContactsColection.findOneAndDelete({userId, contactId});
+    const result = await ContactsColection.findOneAndDelete({_id:contactId, userId});
         if(!result){
             return next(createHttpError(404,"Contact not found"));
         }
