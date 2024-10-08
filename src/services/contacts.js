@@ -4,17 +4,17 @@ import { calculatePaginationData } from "../utils/calculatePaginationData.js";
 
 const getContacts = async ({page, perPage, sortBy = '_id', sortOrder, filter = {}}) => {
     const skip = (page-1) * perPage;
-    const contactQuery = ContactsColection.find();
+    const contactQuery =  ContactsColection.find();
 
     if (filter.userId){
-      contactQuery.were("userId").equals(filter.userId);  //new
+      contactQuery.where("userId").equals(filter.userId);  //new
       };
 
     if(filter.type){
-      contactQuery.were("contactType").equals(filter.type);
+      contactQuery.where("contactType").equals(filter.type);
     };
     if(filter.isFavourite){
-      contactQuery.were("isFavourite").equals(filter.isFavourite);
+      contactQuery.where("isFavourite").equals(filter.isFavourite);
     };
 
     

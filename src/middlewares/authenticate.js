@@ -8,11 +8,11 @@ export async function authenticate(req, res,next){
 
    if (!authHeader) {
       return next(createHttpError(401, "Authorization header missing"));
-  }
+  };
 
-   // if(typeof req.headers.authorization !== 'string'){
-   //  return next(createHttpError(401, "Please provide Authorization header"));
-   // }
+   if(typeof req.headers.authorization !== 'string'){
+    return next(createHttpError(401, "Please provide Authorization header"));
+   };
 
   const [bearer, accessToken] =  authHeader.split(" ", 2);
 

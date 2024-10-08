@@ -11,7 +11,7 @@ router.use(authenticate);
 
 router.get('/contacts', ctrlWrapper(getAllContacts));
 router.get('/contacts/:contactId', isValidId, ctrlWrapper(getContactById));
-router.post('/contacts', validateBody(contactSchema), ctrlWrapper(createContacts));
+router.post('/contacts',isValidId, validateBody(contactSchema), ctrlWrapper(createContacts));
 router.patch('/contacts/:contactId', isValidId,  validateBody(updatecontactSchema), ctrlWrapper(updateContact));
 router.delete('/contacts/:contactId', isValidId, ctrlWrapper(deleteContacts));
 
