@@ -105,8 +105,8 @@ export const updateContact = async(req, res, next)=> {
     //     email:req.body.email,
     //     isFavourite: req.body.isFavourite,
     //     contactType: req.body.contactType,
-    // };
-    const result = await ContactsColection.findOneAndUpdate( {_id:contactId, userId, ...req.body,  new:true} );
+    // };  
+    const result = await ContactsColection.findOneAndUpdate({_id:contactId, userId}, req.body, {new:true} );
     if(!result){
         return next(createHttpError(404, 'Contsct not found'));
     };
