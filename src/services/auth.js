@@ -1,11 +1,18 @@
 import *as bcrypt from "bcrypt";
+import *as fs from "node:fs/promises";
 import crypto from "node:crypto";
+import path from "node:path";
+import jsonwebtoken from "jsonwebtoken";
+import Handlebars from "handlebars";
 
 import { User } from "../db/models/user.js";
 import createHttpError from "http-errors";
 
+import { sendMail } from "../utils/sendMail.js";
+
 import { Session } from "../db/models/session.js";
-import { ACCESS_TOKEN_TTL, REFRESH_TOKEN_TTL } from "../constants/index.js";
+import { ACCESS_TOKEN_TTL, REFRESH_TOKEN_TTL, SMTP, TEMPLATE_DIR} from "../constants/index.js";
+// import { link } from "joi";
 
 
 async function registerUser(user) {
@@ -74,6 +81,66 @@ async function refreshUserSession(sessionId, refreshToken) {
     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_TTL),
     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_TTL),
   });
-}
+};
 
-export {registerUser, loginUser, logoutUser, refreshUserSession};
+async function requestResetEmail(email) {
+  const user = await User.findOne({email});
+
+  if(user === null){
+    throw createHttpError(404, "User not found");
+  };
+
+  const resetToken = jsonwebtoken.sign({
+  sub: user._id,
+  email: user.email,
+}, process.env.JWT_SECRET,{
+  expiresIn: "5m"
+}
+);
+
+const templateFile =  path.join(TEMPLATE_DIR, "reset-password-email.html");
+
+const templateSource =  await fs.readFile(templateFile, {encoding: "utf-8"});
+
+const template = Handlebars.compile(templateSource);
+
+const html = template({
+  name: user.name,
+  link: `${process.env.APP_DOMAIN}/reset-password?token=${resetToken}`
+});
+
+
+  await sendMail({
+    from: SMTP.FROM, // sender address
+    to: email, // list of receivers
+    subject: "Reset your pass", // Subject line
+    html
+
+  });
+};
+
+async function   resetPassword(password, token) {
+try{
+  const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    
+    console.log(decoded);
+
+    const user = await User.findOne({_id: decoded.sub, email: decoded.email});
+
+    if (!user){
+      throw createHttpError(404, 'User not found');
+    };
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await User.updateOne({_id: user._id}, { password: hashedPassword });
+  }catch(error){
+    if(error.name === "TokenExpiredError" || error.name === "JsonWebTokenError"){
+      throw  createHttpError(401, 'Token is expired or invalid.');
+    }
+throw error;
+  };
+
+
+};
+export {registerUser, loginUser, logoutUser, refreshUserSession, requestResetEmail, resetPassword};
