@@ -1,7 +1,7 @@
 // import { status } from "express/lib/response.js";
 // import * as fs from 'node:fs';
 // import path from 'node:path';
-import env from '../utils/env.js';
+import { env } from '../utils/env.js';
 import { ContactsColection } from '../db/models/contacts.js';
 import createHttpError from 'http-errors';
 // import {getAllContacts, getContactById, createContacts} from '../services/contacts.js';

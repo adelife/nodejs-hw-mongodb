@@ -2,7 +2,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import fs from 'node:fs/promises';
 // import path from 'node:path';
 import { CLOUDINARY } from '../constants/index.js';
-import env from '../utils/env.js';
+import { env } from '../utils/env.js';
 
 cloudinary.config({
   cloud_name: env(CLOUDINARY.CLOUD_NAME),

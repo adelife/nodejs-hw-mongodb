@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import * as fs from 'node:fs/promises';
-import env from '../utils/env.js';
+import { env } from '../utils/env.js';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import jsonwebtoken from 'jsonwebtoken';
