@@ -52,6 +52,7 @@ export const getAllContacts = async (req, res, next) => {
       status: 500,
       message: '',
     });
+
     next(error);
   }
 };
