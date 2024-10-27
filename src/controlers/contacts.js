@@ -1,6 +1,7 @@
 // import { status } from "express/lib/response.js";
 import * as fs from 'node:fs';
 import path from 'node:path';
+import env from '../utils/env.js';
 import { ContactsColection } from '../db/models/contacts.js';
 import createHttpError from 'http-errors';
 // import {getAllContacts, getContactById, createContacts} from '../services/contacts.js';
@@ -12,6 +13,7 @@ import { contactFieldList } from '../constants/index.js';
 import { getContacts } from '../services/contacts.js';
 
 import { uploadToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 
 export const getAllContacts = async (req, res, next) => {
   const { _id: userId } = req.user;
@@ -87,14 +89,15 @@ export const createContacts = async (req, res, next) => {
     //     userId: req.user._id,
     //  };
     if (req.file) {
-      if (Boolean(process.env.ENABLE_CLOUDINARY) === 'true') {
-        photo = await uploadToCloudinary(req.file.path);
-        await fs.unlink(req.file.path);
+      if (env('ENABLE_CLOUDINARY') === 'true') {
+        photo = await uploadToCloudinary(req.file, 'photo');
+        // await fs.unlink(req.file.path);
       } else {
-        photo = await fs.rename(
-          req.file.path,
-          path.resolve('src', 'uploads', 'photos', req.file.filename),
-        );
+        photo = await saveFileToUploadDir(req.file, 'photo');
+        // photo = await fs.rename(
+        //   req.file.path,
+        //   path.resolve('src', 'uploads', 'photos', req.file.filename),
+        // );
       }
     }
 
@@ -119,23 +122,28 @@ export const updateContact = async (req, res, next) => {
   const { contactId } = req.params;
   let photo = '';
 
-  if (req.file) {
-    if (Boolean(process.env.ENABLE_CLOUDINARY) === true) {
-      photo = await uploadToCloudinary(req.file.path);
-      await fs.unlink(req.file.path);
-
-      await ContactsColection.createContacts({ id: contactId }, res.secure_url);
-    } else {
-      photo = await fs.rename(
-        req.file.path,
-        path.resolve('src', 'uploads', 'photos', req.file.filename),
-      );
-      await ContactsColection.createContacts(
-        { id: contactId },
-        `http://localhost:3000/uploads/${req.file.filename}`,
-      );
-    }
+  if (env('ENABLE_CLOUDINARY') === 'true') {
+    photo = await uploadToCloudinary(req.file, 'photo');
+  } else {
+    photo = await saveFileToUploadDir(req.file, 'photo');
   }
+  // if (req.file) {
+  //   if (env('ENABLE_CLOUDINARY') === true) {
+  //     photo = await uploadToCloudinary(req.file.path);
+  //     await fs.unlink(req.file.path);
+
+  //     await ContactsColection.createContacts({ id: contactId }, res.secure_url);
+  //   } else {
+  //     photo = await fs.rename(
+  //       req.file.path,
+  //       path.resolve('src', 'uploads', 'photos', req.file.filename),
+  //     );
+  //     await ContactsColection.createContacts(
+  //       { id: contactId },
+  //       `http://localhost:3000/uploads/${req.file.filename}`,
+  //     );
+  //   }
+  // }
 
   // const contact = {
   //     name : req.body.name,
@@ -146,12 +154,14 @@ export const updateContact = async (req, res, next) => {
   // };
   const result = await ContactsColection.findOneAndUpdate(
     { _id: contactId, userId },
-    req.body,
+    ...req.body,
     photo,
     { new: true },
   );
+
   if (!result) {
-    return next(createHttpError(404, 'Contsct not found'));
+    next(createHttpError(404, 'Contsct not found'));
+    return;
   }
   res.status(200).send({
     status: 200,
