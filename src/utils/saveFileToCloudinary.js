@@ -5,9 +5,9 @@ import { CLOUDINARY } from '../constants/index.js';
 import { env } from '../utils/env.js';
 
 cloudinary.config({
-  cloud_name: env(CLOUDINARY.CLOUDINARY_CLOUD_NAME),
-  api_key: env(CLOUDINARY.CLOUDINARY_API_KEY),
-  api_secret: env(CLOUDINARY.CLOUDINARY_API_SECRET),
+  cloud_name: env('CLOUDINARY_CLOUD_NAME'),
+  api_key: env('CLOUDINARY_API_KEY'),
+  api_secret: env('CLOUDINARY_API_SECRET'),
 });
 
 export const uploadToCloudinary = async (file) => {
