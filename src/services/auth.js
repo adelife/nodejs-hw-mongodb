@@ -99,7 +99,7 @@ async function requestResetEmail(email) {
       sub: user._id,
       email: user.email,
     },
-    process.env.JWT_SECRET,
+    env('JWT_SECRET'),
     {
       expiresIn: '5m',
     },
@@ -113,11 +113,11 @@ async function requestResetEmail(email) {
 
   const html = template({
     name: user.name,
-    link: `${process.env.APP_DOMAIN}/reset-password?token=${resetToken}`,
+    link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
   });
 
   await sendMail({
-    from: SMTP.FROM, // sender address
+    from: env('SMTP_FROM'), // sender address
     to: email, // list of receivers
     subject: 'Reset your pass', // Subject line
     html,

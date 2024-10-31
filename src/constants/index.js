@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { env } from '../utils/env.js';
 
 const contactType = ['work', 'home', 'personal'];
 
@@ -17,11 +18,11 @@ export const ACCESS_TOKEN_TTL = 15 * 60 * 1000; // 15 min
 export const REFRESH_TOKEN_TTL = 30 * 24 * 3600 * 1000; //30 days
 
 export const SMTP = {
-  HOST: process.env.SMTP_HOST,
-  PORT: process.env.SMTP_PORT,
-  USER: process.env.SMTP_USER,
-  PASSWORD: process.env.SMTP_PASSWORD,
-  FROM: process.env.SMTP_FROM,
+  HOST: 'SMTP_HOST',
+  PORT: 'SMTP_PORT',
+  USER: 'SMTP_USER',
+  PASSWORD: 'SMTP_PASSWORD',
+  FROM: 'SMTP_FROM',
 };
 
 export const CLOUDINARY = {
