@@ -117,7 +117,7 @@ async function requestResetEmail(email) {
   });
 
   await sendMail({
-    from: env('SMTP_FROM'), // sender address
+    from: SMTP.FROM, // sender address
     to: email, // list of receivers
     subject: 'Reset your pass', // Subject line
     html,
