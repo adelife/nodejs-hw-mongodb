@@ -91,10 +91,10 @@ export const createContacts = async (req, res, next) => {
     //  };
     if (req.file) {
       if (env('ENABLE_CLOUDINARY') === 'true') {
-        photo = await uploadToCloudinary(req.file.filename, 'photo');
+        photo = await uploadToCloudinary(req.file, 'photo');
         // await fs.unlink(req.file.path);
       } else {
-        photo = await saveFileToUploadDir(req.file.filename, 'photo');
+        photo = await saveFileToUploadDir(req.file, 'photo');
         // photo = await fs.rename(
         //   req.file.path,
         //   path.resolve('src', 'uploads', 'photos', req.file.filename),
@@ -105,7 +105,7 @@ export const createContacts = async (req, res, next) => {
     const createdContact = await ContactsColection.create({
       ...req.body,
       userId,
-      photo,
+      photo: photo,
     });
 
     res.status(201).send({
