@@ -87,7 +87,7 @@ async function requestResetEmail(req, res, _next) {
     throw createHttpError(404, 'User not found');
   }
 
-  await AuthService.requestResetEmail({ email });
+  await AuthService.requestResetEmail(email);
 
   res.send({
     status: 200,

@@ -78,9 +78,9 @@ export const getContactById = async (req, res, next) => {
 };
 
 export const createContacts = async (req, res, next) => {
-  const { _id: userId } = req.user;
-  let photo = '';
   try {
+    const { _id: userId } = req.user;
+    let photo;
     //  const contact = {
     //     name : req.body.name,
     //     phoneNumber: req.body.phoneNumber,
@@ -105,7 +105,7 @@ export const createContacts = async (req, res, next) => {
     const createdContact = await ContactsColection.create({
       ...req.body,
       userId,
-      photo: photo,
+      photo,
     });
 
     res.status(201).send({
