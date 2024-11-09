@@ -1,42 +1,52 @@
-import { ContactsColection } from "../db/models/contacts.js";
-import { calculatePaginationData } from "../utils/calculatePaginationData.js";
+import { ContactsColection } from '../db/models/contacts.js';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
+const getContacts = async ({
+  page,
+  perPage,
+  sortBy = '_id',
+  sortOrder,
+  filter = {},
+}) => {
+  const skip = (page - 1) * perPage;
+  const contactQuery = ContactsColection.find();
 
-const getContacts = async ({page, perPage, sortBy = '_id', sortOrder, filter = {}}) => {
-    const skip = (page-1) * perPage;
-    const contactQuery =  ContactsColection.find();
+  if (filter.userId) {
+    contactQuery.where('userId').equals(filter.userId); //new
+  }
 
-    if (filter.userId){
-      contactQuery.where("userId").equals(filter.userId);  //new
-      };
+  if (filter.type) {
+    contactQuery.where('contactType').equals(filter.type);
+  }
+  if (filter.isFavourite) {
+    contactQuery.where('isFavourite').equals(filter.isFavourite);
+  }
 
-    if(filter.type){
-      contactQuery.where("contactType").equals(filter.type);
-    };
-    if(filter.isFavourite){
-      contactQuery.where("isFavourite").equals(filter.isFavourite);
-    };
+  const totalItems = await ContactsColection.find()
+    .merge(contactQuery)
+    .countDocuments();
+  const data = await contactQuery
+    .skip(skip)
+    .limit(perPage)
+    .sort({ [sortBy]: sortOrder })
+    .exec();
 
-    
-    const totalItems = await ContactsColection.find().merge(contactQuery).countDocuments();
-    const data = await contactQuery.skip(skip).limit(perPage).sort({[sortBy] : sortOrder}).exec();
+  const { totalPages, hasNextPage, hasPreviousPage } = calculatePaginationData({
+    total: totalItems,
+    page,
+    perPage,
+  });
 
-    const {totalPages, hasNextPage, hasPreviousPage} = calculatePaginationData({ 
-      total :  totalItems,
-      page,
-      perPage
-    });
-
-    return{
-      data,
-      totalItems,
-      page,
-      perPage,
-      totalPages,
-      hasNextPage,
-      hasPreviousPage,
-    };
+  return {
+    data,
+    totalItems,
+    page,
+    perPage,
+    totalPages,
+    hasNextPage,
+    hasPreviousPage,
   };
+};
 
 // function getAllContacts(contact){
 //     return ContactsColection.find();
@@ -51,9 +61,9 @@ function createContacts(contact) {
 }
 
 export const updateContact = async (filter, data, options = {}) => {
-  const result = await ContactsColection.findOneAndUpdate( filter, data, {
-      includeResultMetadata: true,
-      ...options,
+  const result = await ContactsColection.findOneAndUpdate(filter, data, {
+    includeResultMetadata: true,
+    ...options,
   });
 
   if (!result || !result.value) return null;
@@ -61,11 +71,10 @@ export const updateContact = async (filter, data, options = {}) => {
   const isNew = data && data.lastErrorObject && data.lastErrorObject.upserted;
 
   return {
-      data: result.value,
-      isNew,
+    data: result.value,
+    isNew,
   };
 };
-
 
 // function updateContact(contactId, contact) {
 //   return ContactsColection.findByIdAndUpdate(contactId, contact, { new: true });
@@ -75,10 +84,6 @@ function deleteContacts(contactId) {
   return ContactsColection.findByIdAndDelete(contactId);
 }
 
-
-
-
-
 export {
   getContacts,
   getContactById,
@@ -86,15 +91,6 @@ export {
   // updateContact,
   deleteContacts,
 };
-
-
-
-
-
-
-
-
-
 
 // // export const getAllContacts = async() => {
 // //     const contacts = await ContactsColection.find();
@@ -117,7 +113,7 @@ export {
 //             });
 //             next(error);
 //         }
-        
+
 // };
 
 // export const getContactById = async( req, res, next) =>{
@@ -140,6 +136,5 @@ export {
 //     catch(error){
 //    next(error);
 //     }
-
 
 // };

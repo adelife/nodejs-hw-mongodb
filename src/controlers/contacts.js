@@ -155,8 +155,10 @@ export const updateContact = async (req, res, next) => {
   // };
   const result = await ContactsColection.findOneAndUpdate(
     { _id: contactId, userId },
-    ...req.body,
-    photo,
+    {
+      ...req.body,
+      photo,
+    },
     { new: true },
   );
 
