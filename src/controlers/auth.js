@@ -1,7 +1,9 @@
 import createHttpError from 'http-errors';
 import * as AuthService from '../services/auth.js';
 import { User } from '../db/models/user.js';
+import { generateOAuthURL, valideteCode } from '../utils/googleOAuth2.js';
 // import { registerUser } from "../services/auth.js";
+import { loginOrRegisterUser } from '../services/auth.js';
 
 async function register(req, res) {
   const user = {
@@ -108,4 +110,52 @@ async function resetPassword(req, res, _next) {
   });
 }
 
-export { register, login, logout, refresh, requestResetEmail, resetPassword };
+async function getOAuthURLController(req, res) {
+  const url = generateOAuthURL();
+
+  res.send({
+    status: 200,
+    message: 'Succesfully get Google OAuth URL',
+    data: url,
+  });
+}
+
+async function confirmOAuthController(req, res) {
+  const { code } = req.body;
+  const ticket = await valideteCode(code);
+
+  const session = await loginOrRegisterUser({
+    email: ticket.payload.email,
+    name: ticket.payload.name,
+  });
+  res.cookie('refreshToken', session.refreshToken, {
+    httpOnly: true,
+    expires: session.refreshTokenValidUntil,
+  });
+
+  res.cookie('sessionId', session._id, {
+    httpOnly: true,
+    expires: session.refreshTokenValidUntil,
+  });
+
+  res.send({
+    status: 200,
+    message: 'Login with Google succsesfully',
+    data: {
+      accessToken: session.accessToken,
+    },
+  });
+
+  res.send('Confirmed');
+}
+
+export {
+  register,
+  login,
+  logout,
+  refresh,
+  requestResetEmail,
+  resetPassword,
+  getOAuthURLController,
+  confirmOAuthController,
+};
