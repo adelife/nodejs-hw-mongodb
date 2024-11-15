@@ -1,0 +1,24 @@
+type: object
+required:
+  - _id
+  - name
+  - phoneNumber
+  - contactType
+
+properties:
+  _id:
+    description: 'Contact id'
+    type: string
+    example: '65864dfg5525jk5f58'
+  name:
+    description: 'Contact name'
+    type: string
+    example: 'Olya'
+  phoneNumber:
+    description: 'Contact number phone'
+    type: string
+    example: '380502563285'
+  contactType:
+    description: "Type contact's for contacts-list"
+    type: string
+    example: ['work', 'home', 'personal']

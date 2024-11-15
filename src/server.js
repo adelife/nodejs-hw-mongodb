@@ -11,12 +11,20 @@ import path from 'node:path';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
+// import swaggerUi from 'swagger-ui-express';
+import swaggerDocs from '../src/middlewares/swaggerDocs.js';
+
 // import { getAllContacts, getContactById } from './services/contacts.js';
 
 const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = () => {
   const app = express();
+
+  app.use('/api-docs', swaggerDocs());
+
+  // app.use('/api-docs', swaggerUi.serve);
+  // app.get('/api-docs', swaggerUi.setup(swaggerDocs));
 
   app.use(express.static(path.resolve('src', 'uploads')));
 
