@@ -11,6 +11,9 @@
   },
   "servers": [
     {
+      "url": "https://nodejs-hw-mongodb-tqks.onrender.com"
+    },
+    {
       "url": "http://localhost:3000"
     }
   ],
@@ -126,7 +129,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
@@ -161,9 +164,10 @@
                     "example": "work"
                   },
                   "photo": {
-                    "description": "Contact photo",
+                    "description": "Link to contact photo",
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "example": "https://res.cloudinary.com/dbfktd9nu/image/upload/v1731777412/onudlf8q2c53djb02ei3.webp"
                   }
                 }
               }
@@ -432,6 +436,11 @@
                     "type": "string",
                     "example": "olya@gmail.com"
                   },
+                  "isFavourite": {
+                    "description": "Is contact favorite?",
+                    "type": "boolean",
+                    "example": true
+                  },
                   "contactType": {
                     "description": "Contact type",
                     "type": "string",
@@ -443,9 +452,10 @@
                     "example": "work"
                   },
                   "photo": {
-                    "description": "Contact photo",
+                    "description": "Link to contact photo",
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "example": "https://res.cloudinary.com/dbfktd9nu/image/upload/v1731777412/onudlf8q2c53djb02ei3.webp"
                   }
                 }
               }
@@ -516,6 +526,16 @@
             "type": "string",
             "example": "Olya"
           },
+          "email": {
+            "description": "Contact email",
+            "type": "string",
+            "example": "olya@gmail.com"
+          },
+          "isFavourite": {
+            "description": "Is contact favorite?",
+            "type": "boolean",
+            "example": true
+          },
           "phoneNumber": {
             "description": "Contact number phone",
             "type": "string",
@@ -529,6 +549,11 @@
               "home",
               "personal"
             ]
+          },
+          "photo": {
+            "description": "Link to contact photo",
+            "type": "string",
+            "example": "https://res.cloudinary.com/dbfktd9nu/image/upload/v1731777412/onudlf8q2c53djb02ei3.webp"
           }
         }
       }
