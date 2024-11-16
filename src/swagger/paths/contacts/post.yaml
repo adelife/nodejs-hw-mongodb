@@ -26,15 +26,20 @@ requestBody:
             description: 'Contact email'
             type: string
             example: 'olya@gmail.com'
+          isFavourite:
+            description: 'Is contact favorite?'
+            type: boolean
+            example: true
           contactType:
             description: 'Contact type'
             type: string
             enum: ['work', 'home', 'personal']
             example: work
           photo:
-            description: 'Contact photo'
+            description: 'Link to contact photo'
             type: string
             format: binary
+            example: https://res.cloudinary.com/dbfktd9nu/image/upload/v1731777412/onudlf8q2c53djb02ei3.webp
 responses:
   '201':
     description: Successfully created a contact!
