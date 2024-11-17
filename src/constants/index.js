@@ -42,5 +42,6 @@ export const TEMP_UPLOAD_DIR = path.resolve('src', 'tmp');
 export const UPLOAD_DIR = path.resolve('src', 'uploads', 'photo');
 
 export const SWAGGER_PATH = path.resolve('docs', 'swagger.json');
+// export const SWAGGER_PATH = path.join(process.cwd(), 'docs', 'swagger.json');
 
 export { contactType, sortOrderList, contactFieldList };

@@ -123,10 +123,12 @@ export const updateContact = async (req, res, next) => {
   const { contactId } = req.params;
   let photo = '';
 
-  if (env('ENABLE_CLOUDINARY') === 'true') {
-    photo = await uploadToCloudinary(req.file, 'photo');
-  } else {
-    photo = await saveFileToUploadDir(req.file, 'photo');
+  if (req.file) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photo = await uploadToCloudinary(req.file, 'photo');
+    } else {
+      photo = await saveFileToUploadDir(req.file, 'photo');
+    }
   }
   // if (req.file) {
   //   if (env('ENABLE_CLOUDINARY') === true) {
